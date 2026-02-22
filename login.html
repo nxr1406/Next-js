@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NXR Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 flex items-center justify-center h-screen">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-xl w-96 border border-gray-700">
+        <h2 class="text-2xl font-bold text-white mb-6 text-center">NXR System Login</h2>
+        <form action="/login" method="POST" class="space-y-4">
+            <div>
+                <label class="block text-gray-400 text-sm mb-1">Username</label>
+                <input type="text" name="username" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-blue-500" required>
+            </div>
+            <div>
+                <label class="block text-gray-400 text-sm mb-1">Password</label>
+                <input type="password" name="password" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-blue-500" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition duration-200">Login</button>
+        </form>
+        <p class="text-xs text-gray-500 mt-4 text-center">Protected System - Authorized Access Only</p>
+    </div>
+</body>
+</html>

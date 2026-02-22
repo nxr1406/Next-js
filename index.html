@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NXR | Future Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Config for Custom Colors -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bgDark: '#0e0e0e',
+                        bgCard: '#161616',
+                        neonCyan: '#00ffcc',
+                        neonPink: '#ff00ff',
+                        neonPurple: '#bd00ff',
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- Custom Global Styles --- */
+        :root {
+            --neon-cyan: #00ffcc;
+            --neon-pink: #ff00ff;
+            --bg-dark: #000;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            font-family: OswaldBold;
+        }
+        
+        @font-face {
+            font-family: 'OswaldBold';
+            src: url('Oswald-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+}
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0e0e0e; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-cyan); 
+        }
+
+        /* Neon Glow Utilities */
+        .text-glow-cyan {
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.7);
+        }
+        .text-glow-pink {
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+        }
+        .box-glow-cyan:hover {
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4), inset 0 0 10px rgba(0, 255, 204, 0.1);
+            border-color: var(--neon-cyan);
+        }
+        .box-glow-pink:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4), inset 0 0 10px rgba(255, 0, 255, 0.1);
+            border-color: var(--neon-pink);
+        }
+
+        /* Hero Glitch Effect */
+        .glitch {
+            position: relative;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -1px 0 var(--neon-pink);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -1px 0 var(--neon-cyan);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(12px, 9999px, 5px, 0); }
+            5% { clip: rect(35px, 9999px, 88px, 0); }
+            100% { clip: rect(65px, 9999px, 12px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(89px, 9999px, 15px, 0); }
+            5% { clip: rect(2px, 9999px, 44px, 0); }
+            100% { clip: rect(12px, 9999px, 67px, 0); }
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Timeline Connector */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: #333;
+            transform: translateX(-50%);
+        }
+        @media (max-width: 768px) {
+            .timeline-line::before {
+                left: 20px;
+            }
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Loader */
+        .loader-wrapper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body class="antialiased relative">
+
+    <!-- Preloader -->
+    <div id="preloader" class="loader-wrapper">
+        <div class="text-4xl font-heading font-bold text-transparent bg-clip-text bg-gradient-to-r from-neonCyan to-neonPink animate-pulse">
+            NXR LOADING...
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 backdrop-blur-md bg-bgDark/80 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex-shrink-0">
+                    <a href="#" class="font-heading font-bold text-2xl tracking-wider text-white hover:text-neonCyan transition-colors">
+                        NXR<span class="text-neonCyan">.</span>
+                    </a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#home" class="text-gray-300 hover:text-neonCyan px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                        <a href="#about" class="text-gray-300 hover:text-neonCyan px-3 py-2 rounded-md text-sm font-medium transition-colors">About</a>
+                        <a href="#projects" class="text-gray-300 hover:text-neonCyan px-3 py-2 rounded-md text-sm font-medium transition-colors">Work</a>
+                        <a href="#experience" class="text-gray-300 hover:text-neonCyan px-3 py-2 rounded-md text-sm font-medium transition-colors">Timeline</a>
+                        <a href="#contact" class="px-4 py-2 rounded-full border border-neonCyan text-neonCyan hover:bg-neonCyan hover:text-bgDark transition-all duration-300 text-sm font-bold">Contact</a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button id="mobile-menu-btn" type="button" class="text-gray-400 hover:text-white p-2">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-bgCard border-b border-gray-800 absolute w-full">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="text-gray-300 hover:text-neonCyan block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="#about" class="text-gray-300 hover:text-neonCyan block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <a href="#projects" class="text-gray-300 hover:text-neonCyan block px-3 py-2 rounded-md text-base font-medium">Work</a>
+                <a href="#experience" class="text-gray-300 hover:text-neonCyan block px-3 py-2 rounded-md text-base font-medium">Experience</a>
+                <a href="#contact" class="text-neonCyan block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <!-- Canvas for Particles -->
+        <canvas id="particle-canvas" class="absolute top-0 left-0 w-full h-full z-0 opacity-60"></canvas>
+        
+        <div class="relative z-10 text-center px-4">
+            <div class="mb-4 inline-block">
+                <span class="py-1 px-3 rounded-full border border-gray-700 bg-gray-900/50 text-neonCyan text-xs tracking-widest uppercase mb-4 animate-float">
+                    Welcome to the Next Level
+                </span>
+            </div>
+            <h1 class="text-6xl md:text-8xl font-heading font-bold mb-4 text-white tracking-tighter glitch" data-text="NXR">
+                NXR
+            </h1>
+            <p class="text-xl md:text-3xl text-gray-400 font-light mb-8">
+                Innovating the <span class="text-neonPink font-normal typing-effect">Future</span>
+            </p>
+            
+            <div class="flex justify-center space-x-6 mb-12">
+                <a href="#" class="text-gray-400 hover:text-neonCyan transition-transform hover:-translate-y-1 text-2xl"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-gray-400 hover:text-neonPink transition-transform hover:-translate-y-1 text-2xl"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-gray-400 hover:text-neonCyan transition-transform hover:-translate-y-1 text-2xl"><i class="fab fa-tiktok"></i></a>
+                <a href="#" class="text-gray-400 hover:text-neonPink transition-transform hover:-translate-y-1 text-2xl"><i class="fab fa-telegram"></i></a>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <a href="#about" class="text-gray-500 hover:text-white transition-colors">
+                    <i class="fas fa-chevron-down text-2xl"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Background Gradient Overlay -->
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-bgDark/20 to-bgDark pointer-events-none z-0"></div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="py-24 bg-bgDark relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                
+                <!-- Profile Image -->
+                <div class="w-full md:w-1/3 flex justify-center reveal">
+                    <div class="relative w-64 h-64 md:w-80 md:h-80">
+                        <div class="absolute inset-0 rounded-full border-2 border-neonCyan blur-md opacity-50 animate-pulse"></div>
+                        <div class="absolute inset-0 rounded-full border border-neonPink blur-sm opacity-30 transform rotate-45"></div>
+                        <!-- Placeholder for Profile Image -->
+                        <div class="w-full h-full rounded-full bg-gradient-to-tr from-gray-800 to-gray-900 flex items-center justify-center overflow-hidden border-2 border-gray-700 relative z-10 box-glow-cyan transition-all duration-500">
+                             <span class="text-6xl text-gray-600"><i class="fas fa-user-astronaut"></i></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Content -->
+                <div class="w-full md:w-2/3 reveal delay-100">
+                    <h2 class="text-3xl md:text-4xl font-heading font-bold mb-6 text-white">
+                        About <span class="text-neonCyan">Me</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        I am a visionary developer passionate about merging creativity with code. With a background in full-stack development and creative design, I build digital experiences that are not only functional but visually stunning. I specialize in turning complex problems into elegant, futuristic solutions.
+                    </p>
+
+                    <!-- Skills -->
+                    <div class="space-y-6">
+                        <div class="group">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-300 group-hover:text-neonCyan transition-colors">Web Development (React/Vue)</span>
+                                <span class="text-sm font-medium text-gray-500">95%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-neonCyan to-blue-500 h-2 rounded-full shadow-[0_0_10px_#00ffcc] w-[95%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-300 group-hover:text-neonPink transition-colors">UI/UX Design</span>
+                                <span class="text-sm font-medium text-gray-500">85%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-neonPink to-purple-600 h-2 rounded-full shadow-[0_0_10px_#ff00ff] w-[85%]"></div>
+                            </div>
+                        </div>
+
+                        <div class="group">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-300 group-hover:text-neonCyan transition-colors">Backend & Cloud</span>
+                                <span class="text-sm font-medium text-gray-500">80%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2">
+                                <div class="bg-gradient-to-r from-blue-500 to-neonCyan h-2 rounded-full shadow-[0_0_10px_#00ffcc] w-[80%]"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-4 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 text-xs border border-gray-700 rounded text-gray-400 hover:border-neonCyan hover:text-neonCyan transition-all cursor-default">TypeScript</span>
+                            <span class="px-3 py-1 text-xs border border-gray-700 rounded text-gray-400 hover:border-neonPink hover:text-neonPink transition-all cursor-default">Three.js</span>
+                            <span class="px-3 py-1 text-xs border border-gray-700 rounded text-gray-400 hover:border-neonCyan hover:text-neonCyan transition-all cursor-default">Node.js</span>
+                            <span class="px-3 py-1 text-xs border border-gray-700 rounded text-gray-400 hover:border-neonPink hover:text-neonPink transition-all cursor-default">Tailwind</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 bg-bgDark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4 text-white">
+                    Selected <span class="text-neonPink">Works</span>
+                </h2>
+                <div class="w-20 h-1 bg-neonPink mx-auto rounded shadow-[0_0_10px_#ff00ff]"></div>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex justify-center space-x-4 mb-12 flex-wrap gap-y-4 reveal">
+                <button class="filter-btn active px-6 py-2 rounded-full border border-gray-700 text-gray-400 hover:border-neonCyan hover:text-neonCyan transition-all focus:outline-none focus:border-neonCyan focus:text-neonCyan focus:bg-neonCyan/10 text-sm font-medium" data-filter="all">All</button>
+                <button class="filter-btn px-6 py-2 rounded-full border border-gray-700 text-gray-400 hover:border-neonCyan hover:text-neonCyan transition-all focus:outline-none focus:border-neonCyan focus:text-neonCyan focus:bg-neonCyan/10 text-sm font-medium" data-filter="web">Web Dev</button>
+                <button class="filter-btn px-6 py-2 rounded-full border border-gray-700 text-gray-400 hover:border-neonCyan hover:text-neonCyan transition-all focus:outline-none focus:border-neonCyan focus:text-neonCyan focus:bg-neonCyan/10 text-sm font-medium" data-filter="design">Design</button>
+                <button class="filter-btn px-6 py-2 rounded-full border border-gray-700 text-gray-400 hover:border-neonCyan hover:text-neonCyan transition-all focus:outline-none focus:border-neonCyan focus:text-neonCyan focus:bg-neonCyan/10 text-sm font-medium" data-filter="ai">AI/ML</button>
+            </div>
+
+            <!-- Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+                
+                <!-- Project 1 -->
+                <div class="project-card group rounded-xl overflow-hidden bg-bgCard border border-gray-800 transition-all duration-300 hover:-translate-y-2 box-glow-cyan reveal" data-category="web">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-black relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center text-4xl text-gray-600 group-hover:scale-110 transition-transform duration-500">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+                            <a href="#" class="p-3 bg-neonCyan text-bgDark rounded-full hover:bg-white transition-colors"><i class="fas fa-eye"></i></a>
+                            <a href="#" class="p-3 bg-gray-800 text-white border border-gray-600 rounded-full hover:border-neonCyan hover:text-neonCyan transition-colors"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-neonCyan mb-2 uppercase tracking-wide">Web Development</div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-neonCyan transition-colors">Cyber Dashboard</h3>
+                        <p class="text-gray-400 text-sm mb-4">A real-time data visualization dashboard with dark mode analytics.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">React</span>
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">D3.js</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card group rounded-xl overflow-hidden bg-bgCard border border-gray-800 transition-all duration-300 hover:-translate-y-2 box-glow-pink reveal" data-category="ai">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-black relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center text-4xl text-gray-600 group-hover:scale-110 transition-transform duration-500">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+                            <a href="#" class="p-3 bg-neonPink text-white rounded-full hover:bg-white hover:text-bgDark transition-colors"><i class="fas fa-eye"></i></a>
+                            <a href="#" class="p-3 bg-gray-800 text-white border border-gray-600 rounded-full hover:border-neonPink hover:text-neonPink transition-colors"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-neonPink mb-2 uppercase tracking-wide">AI / ML</div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-neonPink transition-colors">Neural Image Gen</h3>
+                        <p class="text-gray-400 text-sm mb-4">Generative adversarial network model for creating abstract neon art.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Python</span>
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">TensorFlow</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card group rounded-xl overflow-hidden bg-bgCard border border-gray-800 transition-all duration-300 hover:-translate-y-2 box-glow-cyan reveal" data-category="design">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-black relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center text-4xl text-gray-600 group-hover:scale-110 transition-transform duration-500">
+                            <i class="fas fa-pencil-ruler"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+                            <a href="#" class="p-3 bg-neonCyan text-bgDark rounded-full hover:bg-white transition-colors"><i class="fas fa-eye"></i></a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-neonCyan mb-2 uppercase tracking-wide">UI Design</div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-neonCyan transition-colors">Neo Bank App</h3>
+                        <p class="text-gray-400 text-sm mb-4">Complete UI kit and prototype for a fintech mobile application.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Figma</span>
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Prototyping</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card group rounded-xl overflow-hidden bg-bgCard border border-gray-800 transition-all duration-300 hover:-translate-y-2 box-glow-pink reveal" data-category="web">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-black relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center text-4xl text-gray-600 group-hover:scale-110 transition-transform duration-500">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+                             <a href="#" class="p-3 bg-neonPink text-white rounded-full hover:bg-white hover:text-bgDark transition-colors"><i class="fas fa-eye"></i></a>
+                            <a href="#" class="p-3 bg-gray-800 text-white border border-gray-600 rounded-full hover:border-neonPink hover:text-neonPink transition-colors"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-neonPink mb-2 uppercase tracking-wide">E-Commerce</div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-neonPink transition-colors">Vogue Market</h3>
+                        <p class="text-gray-400 text-sm mb-4">Headless Shopify storefront built with Next.js and Tailwind.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Next.js</span>
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Shopify API</span>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Project 5 -->
+                 <div class="project-card group rounded-xl overflow-hidden bg-bgCard border border-gray-800 transition-all duration-300 hover:-translate-y-2 box-glow-cyan reveal" data-category="ai">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-black relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center text-4xl text-gray-600 group-hover:scale-110 transition-transform duration-500">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+                            <a href="#" class="p-3 bg-neonCyan text-bgDark rounded-full hover:bg-white transition-colors"><i class="fas fa-eye"></i></a>
+                            <a href="#" class="p-3 bg-gray-800 text-white border border-gray-600 rounded-full hover:border-neonCyan hover:text-neonCyan transition-colors"><i class="fab fa-github"></i></a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-neonCyan mb-2 uppercase tracking-wide">Chatbot</div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-neonCyan transition-colors">Support AI</h3>
+                        <p class="text-gray-400 text-sm mb-4">NLP-powered customer support bot integration.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">OpenAI API</span>
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Node.js</span>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Project 6 -->
+                 <div class="project-card group rounded-xl overflow-hidden bg-bgCard border border-gray-800 transition-all duration-300 hover:-translate-y-2 box-glow-pink reveal" data-category="design">
+                    <div class="h-48 bg-gradient-to-br from-gray-800 to-black relative overflow-hidden">
+                        <div class="absolute inset-0 flex items-center justify-center text-4xl text-gray-600 group-hover:scale-110 transition-transform duration-500">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+                            <a href="#" class="p-3 bg-neonPink text-white rounded-full hover:bg-white hover:text-bgDark transition-colors"><i class="fas fa-eye"></i></a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs text-neonPink mb-2 uppercase tracking-wide">Branding</div>
+                        <h3 class="text-xl font-bold text-white mb-2 group-hover:text-neonPink transition-colors">NXR Identity</h3>
+                        <p class="text-gray-400 text-sm mb-4">The visual identity system created for this portfolio brand.</p>
+                        <div class="flex gap-2">
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Adobe CC</span>
+                            <span class="text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded">Blender</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="mt-12 text-center reveal">
+                <a href="#" class="inline-block px-8 py-3 border border-gray-600 text-gray-300 rounded hover:border-white hover:text-white hover:bg-gray-800 transition-all">View All Projects</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-24 bg-bgDark relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4 text-white">
+                    My <span class="text-neonCyan">Journey</span>
+                </h2>
+                <div class="w-20 h-1 bg-neonCyan mx-auto rounded shadow-[0_0_10px_#00ffcc]"></div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="relative timeline-line p-0 md:p-10">
+                
+                <!-- Item 1 (Right) -->
+                <div class="relative z-10 mb-12 md:mb-0 md:w-1/2 md:ml-auto reveal">
+                    <div class="bg-bgCard p-6 rounded-lg border border-gray-800 ml-8 md:ml-8 relative box-glow-cyan">
+                        <!-- Dot -->
+                        <div class="absolute top-1/2 -left-12 md:-left-12 transform -translate-y-1/2 w-8 h-8 rounded-full bg-bgDark border-4 border-neonCyan shadow-[0_0_15px_#00ffcc] z-20"></div>
+                        <!-- Connector (Mobile only) -->
+                        <div class="absolute top-1/2 -left-8 w-8 h-0.5 bg-neonCyan md:block hidden"></div>
+                        
+                        <span class="text-neonCyan font-bold text-sm tracking-widest">2024 - PRESENT</span>
+                        <h3 class="text-xl font-bold text-white mt-1">Senior Frontend Engineer</h3>
+                        <h4 class="text-gray-500 text-sm mb-4">TechFlow Solutions</h4>
+                        <p class="text-gray-400 text-sm">Leading the frontend team in rebuilding the core SaaS product using React 18 and Next.js. Improved performance by 40%.</p>
+                    </div>
+                </div>
+
+                <!-- Item 2 (Left) -->
+                <div class="relative z-10 mb-12 md:mb-0 md:w-1/2 reveal delay-100">
+                    <div class="bg-bgCard p-6 rounded-lg border border-gray-800 ml-8 md:mr-8 md:ml-0 relative box-glow-pink">
+                         <!-- Dot -->
+                         <div class="absolute top-1/2 -left-12 md:left-auto md:-right-12 transform -translate-y-1/2 w-8 h-8 rounded-full bg-bgDark border-4 border-neonPink shadow-[0_0_15px_#ff00ff] z-20"></div>
+                         
+                         <span class="text-neonPink font-bold text-sm tracking-widest">2022 - 2024</span>
+                        <h3 class="text-xl font-bold text-white mt-1">Full Stack Developer</h3>
+                        <h4 class="text-gray-500 text-sm mb-4">Creative Agency X</h4>
+                        <p class="text-gray-400 text-sm">Developed award-winning websites for international clients. Specialized in WebGL interactions and GSAP animations.</p>
+                    </div>
+                </div>
+
+                <!-- Item 3 (Right) -->
+                <div class="relative z-10 mb-12 md:mb-0 md:w-1/2 md:ml-auto reveal delay-200">
+                    <div class="bg-bgCard p-6 rounded-lg border border-gray-800 ml-8 md:ml-8 relative box-glow-cyan">
+                        <!-- Dot -->
+                        <div class="absolute top-1/2 -left-12 md:-left-12 transform -translate-y-1/2 w-8 h-8 rounded-full bg-bgDark border-4 border-neonCyan shadow-[0_0_15px_#00ffcc] z-20"></div>
+                        
+                        <span class="text-neonCyan font-bold text-sm tracking-widest">2020 - 2022</span>
+                        <h3 class="text-xl font-bold text-white mt-1">UI/UX Designer</h3>
+                        <h4 class="text-gray-500 text-sm mb-4">Freelance</h4>
+                        <p class="text-gray-400 text-sm">Worked with startups to define their visual identity and product user flows. Created comprehensive design systems.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-bgDark border-t border-gray-900">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4 text-white">
+                    Get In <span class="text-neonCyan">Touch</span>
+                </h2>
+                <p class="text-gray-400">Have a project in mind? Let's build the future together.</p>
+            </div>
+
+            <div class="bg-bgCard p-8 rounded-2xl border border-gray-800 shadow-2xl reveal">
+                <form onsubmit="event.preventDefault(); alert('Message sent to the future! (Demo only)');" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="group">
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+                            <input type="text" class="w-full bg-bgDark border-b border-gray-700 focus:border-neonCyan focus:ring-0 text-white p-3 transition-colors outline-none" placeholder="John Doe" required>
+                        </div>
+                        <div class="group">
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                            <input type="email" class="w-full bg-bgDark border-b border-gray-700 focus:border-neonCyan focus:ring-0 text-white p-3 transition-colors outline-none" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label class="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                        <textarea rows="4" class="w-full bg-bgDark border-b border-gray-700 focus:border-neonPink focus:ring-0 text-white p-3 transition-colors outline-none resize-none" placeholder="Your message here..." required></textarea>
+                    </div>
+                    <div class="text-center mt-8">
+                        <button type="submit" class="relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-bold text-white rounded-full group cursor-pointer">
+                            <span class="absolute inset-0 w-full h-full bg-gradient-to-br from-neonCyan to-blue-500 group-hover:from-neonPink group-hover:to-purple-600 transition-all duration-300"></span>
+                            <span class="absolute bottom-0 right-0 block w-64 h-64 mb-32 mr-4 transition duration-500 origin-bottom-left transform rotate-45 translate-x-24 bg-white opacity-10 group-hover:rotate-90 ease"></span>
+                            <span class="relative">Send Message</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="mt-16 flex justify-center space-x-8 reveal">
+                <a href="#" class="flex flex-col items-center text-gray-500 hover:text-neonCyan transition-colors">
+                    <i class="fas fa-envelope text-2xl mb-2"></i>
+                    <span class="text-xs">hello@nxr.dev</span>
+                </a>
+                <a href="#" class="flex flex-col items-center text-gray-500 hover:text-neonPink transition-colors">
+                    <i class="fas fa-map-marker-alt text-2xl mb-2"></i>
+                    <span class="text-xs">New York, NY</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-8 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="text-2xl font-bold text-white mb-4 md:mb-0">
+                NXR<span class="text-neonCyan">.</span>
+            </div>
+            <div class="text-gray-500 text-sm mb-4 md:mb-0">
+                &copy; 2024 NXR Portfolio. All Rights Reserved.
+            </div>
+            
+            <!-- Back to top -->
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="p-3 bg-gray-900 rounded-full text-white hover:bg-neonCyan hover:text-bgDark transition-all">
+                <i class="fas fa-arrow-up"></i>
+            </button>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Preloader
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        });
+
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Intersection Observer for Scroll Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Project Filtering
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all
+                filterBtns.forEach(b => b.classList.remove('active', 'bg-neonCyan/10', 'border-neonCyan', 'text-neonCyan'));
+                // Add active to click
+                btn.classList.add('active', 'bg-neonCyan/10', 'border-neonCyan', 'text-neonCyan');
+                
+                const filter = btn.getAttribute('data-filter');
+
+                projectCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'scale(1)';
+                        }, 50);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.9)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // --- Canvas Particle System ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        // Resize handling
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles();
+        }
+        
+        window.addEventListener('resize', resize);
+        
+        // Particle Class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+                this.color = Math.random() > 0.5 ? '#00ffcc' : '#ff00ff';
+                this.alpha = Math.random() * 0.5 + 0.1;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Wrap around screen
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.alpha;
+                ctx.fill();
+            }
+        }
+        
+        // Init Particles
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.min(window.innerWidth / 10, 100); // Responsive count
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        // Mouse Interaction
+        let mouse = { x: null, y: null };
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Animation Loop
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+                
+                // Draw connections
+                particles.forEach(p2 => {
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = p.color;
+                        ctx.globalAlpha = (100 - dist) / 1000;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                });
+                
+                // Mouse repulsion
+                if (mouse.x != null) {
+                    const dx = p.x - mouse.x;
+                    const dy = p.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        const angle = Math.atan2(dy, dx);
+                        p.x += Math.cos(angle) * 1;
+                        p.y += Math.sin(angle) * 1;
+                    }
+                }
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        resize();
+        animate();
+
+    </script>
+</body>
+</html>
